@@ -45,20 +45,30 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email' , 'password');
+        // //$credentials = $request->only('email' , 'password');
 
-        if(Auth::attempt($credentials)) 
-        {
-            $user = User::where('email', $request->email)->first();
-            $token = $user->createToken('Levis Products')->accessToken;
-            return response()->json(['token' => $token, 'user' => new UserResource(true , 'Login Berhasil ' ,$user)], 200);
-        }else
-        {
-            return response()->json(['error' => 'Unauthorized'], 402);
+        // if(Auth::attempt($credentials)) 
+        // {
+        //     $user = User::where('email', $request->email)->first();
+        //     //$token = $user->createToken('Levis Products')->accessToken;
+        //     return new UserResource(true,'login berhasil',$user);
+        // }else
+        // {
+        //     return response()->json(['error' => 'Unauthorized'], 402);
+        // }
+  
+
+        $credentials = $request->only('email', 'password');
+
+        if (auth()->attempt($credentials)) {
+            $user = auth()->user();
+            return response()->json(['message' => 'Login successful', 'user' => $user], 200);
         }
-
+    
+        return response()->json(['message' => 'Invalid credentials'], 401);
+}
 
         
     }
 
-}
+
